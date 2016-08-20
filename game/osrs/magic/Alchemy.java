@@ -22,7 +22,7 @@ public enum Alchemy implements Spells {
         this.level = level;
         this.animationId = animationId;
     }
-
+    @Override
     public String getName() {
         return name;
     }
