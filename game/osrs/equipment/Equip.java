@@ -18,65 +18,64 @@ public class Equip {
 
     /**
      * Equips a single item within the player's inventory
-     * @param name  Pattern - the Pattern which will match the name of the item to be equipped
-     * @return      whether the action of equipping the item was successful
+     *
+     * @param name Pattern - the Pattern which will match the name of the item to be equipped
+     * @return whether the action of equipping the item was successful
      */
     public static boolean item(Pattern name) {
         SpriteItem item = Inventory.newQuery().names(name).actions(EQUIP_PATTERN).results().first();
         if (item != null) {
-            for (int i = 0; i < 3; i++) {
                 SpriteItem selectedItem = Inventory.getSelectedItem();
                 if (selectedItem != null && selectedItem.click()) {
                     System.out.println("Deselected item: " + selectedItem.getDefinition().getName());
                 }
                 return item.interact(EQUIP_PATTERN);
-            }
         }
         return false;
     }
 
     /**
      * Equips a single item within the player's inventory
-     * @param name  String - the name of the item to be equipped
-     * @return      whether the action of equipping the item was successful
+     *
+     * @param name String - the name of the item to be equipped
+     * @return whether the action of equipping the item was successful
      */
     public static boolean item(String name) {
         SpriteItem item = Inventory.newQuery().names(name).actions(EQUIP_PATTERN).results().first();
         if (item != null) {
-            for (int i = 0; i < 3; i++) {
                 SpriteItem selectedItem = Inventory.getSelectedItem();
                 if (selectedItem != null && selectedItem.click()) {
                     System.out.println("Deselected item: " + selectedItem.getDefinition().getName());
                 }
                 return item.interact(EQUIP_PATTERN);
-            }
         }
         return false;
     }
+
     /**
      * Equips a single item within the player's inventory
-     * @param item  SpriteItem - the item object to be equipped
-     * @return      whether the action of equipping the item was successful
+     *
+     * @param item SpriteItem - the item object to be equipped
+     * @return whether the action of equipping the item was successful
      */
-    public static boolean item(SpriteItem item){
+    public static boolean item(SpriteItem item) {
         if (item != null) {
-            for (int i = 0; i < 3; i++) {
-                SpriteItem selectedItem = Inventory.getSelectedItem();
-                if (selectedItem != null && selectedItem.click()) {
-                    System.out.println("Deselected item: " + selectedItem.getDefinition().getName());
-                }
-                return item.interact(EQUIP_PATTERN);
+            SpriteItem selectedItem = Inventory.getSelectedItem();
+            if (selectedItem != null && selectedItem.click()) {
+                System.out.println("Deselected item: " + selectedItem.getDefinition().getName());
             }
+            return item.interact(EQUIP_PATTERN);
         }
         return false;
     }
 
     /**
      * Pretty useful method for equipping gear sets
+     *
      * @param listItems List of Patterns - List of Patterns matching items to be equipped
-     * @return          whether all items within the list were equipped
+     * @return whether all items within the list were equipped
      */
-    public static boolean itemList(List<Pattern> listItems){
+    public static boolean itemList(List<Pattern> listItems) {
         listItems
                 .stream()
                 .filter(s -> !Inventory.newQuery().names(s).results().isEmpty() && Equipment.newQuery().names(s).results().isEmpty())
