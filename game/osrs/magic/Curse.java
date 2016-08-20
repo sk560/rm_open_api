@@ -26,7 +26,7 @@ public enum Curse implements Spells {
         this.spell = spell;
         this.level = level;
     }
-
+    @Override
     public String getName() {
         return name;
     }

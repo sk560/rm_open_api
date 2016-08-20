@@ -7,5 +7,5 @@ package com.rm_open_api.game.osrs.magic;
  **/
 public interface Spells {
 
-
+    String getName();
 }
