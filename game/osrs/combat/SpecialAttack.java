@@ -55,11 +55,11 @@ public class SpecialAttack {
         return standardItems.stream().allMatch(s -> !Equipment.newQuery().names(s).results().isEmpty());
     }
 
-    public static boolean isWearingSpecialAttackGear(String[] specialItems) {
+    public static boolean isWearingSpecialAttackGear(String... specialItems) {
         return Equipment.containsAllOf(specialItems);
     }
 
-    public static boolean isWearingStandardAttackGear(String[] standardItems) {
+    public static boolean isWearingStandardAttackGear(String... standardItems) {
         return Equipment.containsAllOf(standardItems);
     }
 
