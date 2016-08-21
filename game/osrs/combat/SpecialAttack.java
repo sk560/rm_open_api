@@ -1,6 +1,6 @@
 package com.rm_open_api.game.osrs.combat;
 
-import com.prime_bots.api.osrs.combat.Combat;
+import com.runemate.game.api.hybrid.local.Varp;
 import com.runemate.game.api.hybrid.local.Varps;
 import com.runemate.game.api.hybrid.local.hud.interfaces.Equipment;
 import com.runemate.game.api.hybrid.local.hud.interfaces.InterfaceComponent;
@@ -29,7 +29,7 @@ public class SpecialAttack {
     }
 
     private static boolean isSpecialAttackEnabled(){
-        return getSpecialAttackButton().getTextColor().equals(SPECIAL_SELECTED);
+        return Varps.getAt(301).getValue() == 1;
     }
 
     public static boolean useSpecialAttack(){
