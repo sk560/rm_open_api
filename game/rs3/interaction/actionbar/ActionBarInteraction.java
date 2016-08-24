@@ -1,4 +1,4 @@
-package com.rm_open_api.game.hybrid.interaction.actionbar;
+package com.rm_open_api.game.rs3.interaction.actionbar;
 
 import com.runemate.game.api.hybrid.Environment;
 import com.runemate.game.api.hybrid.input.Keyboard;
