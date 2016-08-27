@@ -1,5 +1,6 @@
 package com.rm_open_api.game.osrs.navigation;
 
+import com.runemate.game.api.hybrid.entities.Player;
 import com.runemate.game.api.hybrid.local.Varbit;
 import com.runemate.game.api.hybrid.local.Varbits;
 import com.runemate.game.api.hybrid.local.hud.interfaces.InterfaceComponent;
@@ -137,6 +138,14 @@ public class FairyRing {
      */
     private static String formattedCode(String code) {
         return code.replaceAll(".(?=.)", "$0 ");
+    }
+
+    /**
+     * @return if local player is at root fairy-ring node
+     */
+    public boolean atRootNode(){
+        Player player = Players.getLocal();
+        return player != null && VICINITY.contains(player);
     }
 
     private enum Dial {
