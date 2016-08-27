@@ -1,4 +1,4 @@
-package com.rm_open_api.game.osrs.navigation;
+package com.rm_open_api.game.navigation.osrs;
 
 import com.runemate.game.api.hybrid.entities.Player;
 import com.runemate.game.api.hybrid.local.Varbit;
@@ -103,6 +103,8 @@ public class FairyRing {
             if(enterRingCode(code)){
                 System.out.println("Entering code");
             }
+        } else {
+            getFairyRingInterface().interact(ACTION);
         }
 
         return Execution.delayUntil(() -> !VICINITY.contains(Players.getLocal()), 3000, 4000);
@@ -143,7 +145,7 @@ public class FairyRing {
     /**
      * @return if local player is at root fairy-ring node
      */
-    public boolean atRootNode(){
+    public static boolean atRootNode(){
         Player player = Players.getLocal();
         return player != null && VICINITY.contains(player);
     }
@@ -159,6 +161,7 @@ public class FairyRing {
         private String[] values;
         private final String CLOCKWISE = "Rotate clockwise";
         private final String ANTI_CLOCKWISE = "Rotate counter-clockwise";
+        private final int CONTAINER = 398;
 
         Dial(int clockWise, int counterClockWise, int varBit, String... values) {
             this.clockWise = clockWise;
@@ -192,7 +195,7 @@ public class FairyRing {
          * @return if rotating the dial was successful
          */
         private boolean rotateClockwise() {
-            InterfaceComponent component = Interfaces.getAt(398, clockWise);
+            InterfaceComponent component = Interfaces.getAt(CONTAINER, clockWise);
             return component != null && component.interact(CLOCKWISE);
         }
 
@@ -201,7 +204,7 @@ public class FairyRing {
          * @return if rotating the dial was successful
          */
         private boolean rotateAntiClockwise() {
-            InterfaceComponent component = Interfaces.getAt(398, counterClockWise);
+            InterfaceComponent component = Interfaces.getAt(CONTAINER, counterClockWise);
             return component != null && component.interact(ANTI_CLOCKWISE);
         }
 
