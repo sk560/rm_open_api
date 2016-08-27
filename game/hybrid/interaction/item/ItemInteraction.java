@@ -1,11 +1,9 @@
 package com.rm_open_api.game.hybrid.interaction.item;
 
-import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import com.runemate.game.api.hybrid.local.hud.interfaces.Inventory;
 import com.runemate.game.api.hybrid.local.hud.interfaces.SpriteItem;
-import com.runemate.game.api.hybrid.util.calculations.Random;
 
 /**
  * @author Mihael
@@ -14,6 +12,14 @@ import com.runemate.game.api.hybrid.util.calculations.Random;
  */
 
 public class ItemInteraction {
+
+	/**
+	 * Selects item
+	 * 
+	 * @param item
+	 *            - SpriteItem you want to select
+	 * @return if item is selected
+	 */
 
 	public static boolean selectItem(SpriteItem item) {
 		SpriteItem selectedItem = Inventory.getSelectedItem();
@@ -37,8 +43,16 @@ public class ItemInteraction {
 		return false;
 	}
 
-	public static boolean selectItem(String... i) {
-		SpriteItem item = Inventory.newQuery().names(i).results().random();
+	/**
+	 * Selects item
+	 * 
+	 * @param names
+	 *            - Items names eg: Orange, Apple
+	 * @return if any random item from name array is selected
+	 */
+
+	public static boolean selectItem(String... names) {
+		SpriteItem item = Inventory.newQuery().names(names).results().random();
 		SpriteItem selectedItem = Inventory.getSelectedItem();
 
 		if (item != null) {
@@ -61,8 +75,15 @@ public class ItemInteraction {
 		return false;
 	}
 
-	public static boolean interactItem(String action, String... i) {
-		SpriteItem item = Inventory.newQuery().names(i).results().random();
+	/**
+	 * Interacts item using specified action
+	 * @param action - Action to interact item with
+	 * @param names - Items (names) you want to interact with
+	 * @return if interaction with any item in array of names is successful.
+	 */
+
+	public static boolean interactItem(String action, String... names) {
+		SpriteItem item = Inventory.newQuery().names(names).results().random();
 		SpriteItem selectedItem = Inventory.getSelectedItem();
 
 		if (item != null) {
@@ -78,6 +99,13 @@ public class ItemInteraction {
 		}
 		return false;
 	}
+	
+	/**
+	 * Interacts item using specified action
+	 * @param action - Action to interact item with
+	 * @param pattern - Patterns of item names you want to interact with. Eg: *.logs
+	 * @return if interaction with any item in array of names is successful.
+	 */
 
 	public static boolean interactItem(String action, Pattern... pattern) {
 		SpriteItem item = Inventory.newQuery().names(pattern).results().random();
@@ -96,32 +124,31 @@ public class ItemInteraction {
 		}
 		return false;
 	}
+	
+	/**
+	 * Uses items on each other
+	 * @param firstItem - first item to use
+	 * @param secondItem - second item to use
+	 * @return when interaction with items is successful.
+	 */
 
-	public static boolean useOn(SpriteItem j, SpriteItem i, Callable<Boolean> condition) {
-		String nameI = i.getDefinition().getName();
-		String nameJ = j.getDefinition().getName();
-		if (nameI != null && nameJ != null) {
+	public static boolean useOn(SpriteItem firstItem, SpriteItem secondItem) {
+		String nameFirst = firstItem.getDefinition().getName();
+		String nameSecond = secondItem.getDefinition().getName();
+		if (nameFirst != null && nameSecond != null) {
 			for (int tries = 0; tries < 3; tries++) {
 				SpriteItem selectedItem = Inventory.getSelectedItem();
 				if (selectedItem != null) {
 					String selectedName = selectedItem.getDefinition().getName();
-					if (selectedName.equals(nameI)) {
-						selectItem(nameI);
-					} else if (selectedName.equals(nameJ)) {
-						selectItem(nameJ);
+					if (selectedName.equals(nameFirst)) {
+						if(selectItem(nameFirst)) return true;
+					} else if (selectedName.equals(nameSecond)) {
+						if(selectItem(nameSecond)) return true;
 					} else {
 						selectedItem.click();
 					}
 				} else {
-					switch (Random.nextInt(0, 5)) {
-					case 3:
-						selectItem(nameI);
-						break;
-
-					default:
-						selectItem(nameJ);
-						break;
-					}
+					selectItem(nameFirst, nameSecond);
 				}
 
 			}
