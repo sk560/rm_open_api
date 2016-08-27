@@ -5,53 +5,27 @@ import java.util.regex.Pattern;
 
 import com.runemate.game.api.hybrid.local.hud.interfaces.Inventory;
 import com.runemate.game.api.hybrid.local.hud.interfaces.SpriteItem;
+import com.runemate.game.api.hybrid.util.calculations.Random;
 
 /**
  * @author Mihael
  *
- * 21. avg. 2016
+ *         21. avg. 2016
  */
 
 public class ItemInteraction {
 
-	public boolean selectItem(SpriteItem i) {
-		if (i != null) {
-			for (int o = 0; o < 3; o++) {
-
-				if (Inventory.getSelectedItem() != null) {
-					String selectedName = Inventory.getSelectedItem().getDefinition().getName();
-					String name = i.getDefinition().getName();
-					if (selectedName.equals(name)) {
-						return true;
-					} else {
-						if (Inventory.getSelectedItem().click()) {
-							// return selectItem(i);
-						}
-					}
-				} else {
-					if (i.click()) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean selectItem(String i) {
-		SpriteItem item = Inventory.getItems(i).random();
+	public static boolean selectItem(SpriteItem item) {
+		SpriteItem selectedItem = Inventory.getSelectedItem();
 		if (item != null) {
-			for (int o = 0; o < 3; o++) {
-
-				if (Inventory.getSelectedItem() != null) {
-					String selectedName = Inventory.getSelectedItem().getDefinition().getName();
+			for (int tries = 0; tries < 3; tries++) {
+				if (selectedItem != null) {
+					String selectedName = selectedItem.getDefinition().getName();
 					String name = item.getDefinition().getName();
 					if (selectedName.equals(name)) {
 						return true;
 					} else {
-						if (Inventory.getSelectedItem().click()) {
-							// return selectItem(i);
-						}
+						selectedItem.click();
 					}
 				} else {
 					if (item.click()) {
@@ -63,20 +37,19 @@ public class ItemInteraction {
 		return false;
 	}
 
-	public boolean selectItem(String... i) {
-		SpriteItem item = Inventory.getItems(i).random();
+	public static boolean selectItem(String... i) {
+		SpriteItem item = Inventory.newQuery().names(i).results().random();
+		SpriteItem selectedItem = Inventory.getSelectedItem();
 
 		if (item != null) {
-			for (int o = 0; o < 3; o++) {
-				if (Inventory.getSelectedItem() != null) {
-					String selectedName = Inventory.getSelectedItem().getDefinition().getName();
+			for (int tries = 0; tries < 3; tries++) {
+				if (selectedItem != null) {
+					String selectedName = selectedItem.getDefinition().getName();
 					String name = item.getDefinition().getName();
 					if (selectedName.equals(name)) {
 						return true;
 					} else {
-						if (Inventory.getSelectedItem().click()) {
-							// return selectItem(i);
-						}
+						selectedItem.click();
 					}
 				} else {
 					if (item.click()) {
@@ -88,78 +61,69 @@ public class ItemInteraction {
 		return false;
 	}
 
-	public boolean interactItem(String action, Pattern name) {
-		SpriteItem item = Inventory.newQuery().names(name).results().random();
-		if (item != null) {
-			for (int o = 0; o < 3; o++) {
-				SpriteItem selectedItem = Inventory.getSelectedItem();
-				if (selectedItem != null) {
-					if (selectedItem.click()) {
+	public static boolean interactItem(String action, String... i) {
+		SpriteItem item = Inventory.newQuery().names(i).results().random();
+		SpriteItem selectedItem = Inventory.getSelectedItem();
 
+		if (item != null) {
+			for (int tries = 0; tries < 3; tries++) {
+				if (selectedItem != null) {
+					selectedItem.click();
+				} else {
+					if (item.interact(action)) {
+						return true;
 					}
-				}
-				if (item.interact(action)) {
-					return true;
 				}
 			}
 		}
-
 		return false;
 	}
 
-	public boolean interactItem(String action, SpriteItem item) {
-		if (item != null) {
-			for (int o = 0; o < 3; o++) {
-				SpriteItem selectedItem = Inventory.getSelectedItem();
-				if (selectedItem != null) {
-					if (selectedItem.click()) {
+	public static boolean interactItem(String action, Pattern... pattern) {
+		SpriteItem item = Inventory.newQuery().names(pattern).results().random();
+		SpriteItem selectedItem = Inventory.getSelectedItem();
 
+		if (item != null) {
+			for (int tries = 0; tries < 3; tries++) {
+				if (selectedItem != null) {
+					selectedItem.click();
+				} else {
+					if (item.interact(action)) {
+						return true;
 					}
-				}
-				if (item.interact(action)) {
-					return true;
 				}
 			}
 		}
-
 		return false;
 	}
 
-	public boolean useOn(SpriteItem j, SpriteItem i, Callable<Boolean> condition) {
+	public static boolean useOn(SpriteItem j, SpriteItem i, Callable<Boolean> condition) {
 		String nameI = i.getDefinition().getName();
 		String nameJ = j.getDefinition().getName();
 		if (nameI != null && nameJ != null) {
-			for (int o = 0; o < 3; o++) {
-
-				if (Inventory.containsAllOf(nameI, nameJ)) {
-					SpriteItem selected = Inventory.getSelectedItem();
-					if (selected != null) {
-						String selectedName = selected.getDefinition().getName();
-						if (selectedName.equals(nameI)) {
-							i = Inventory.newQuery().names(nameJ).results().random();
-							if (i != null) {
-								if (i.interact("Use")) {
-									return true;
-								}
-							}
-						} else if (selectedName.equals(nameJ)) {
-							j = Inventory.newQuery().names(nameI).results().random();
-							if (j != null) {
-								if (j.interact("Use")) {
-									return true;
-								}
-							}
-						} else {
-							selected.click();
-						}
+			for (int tries = 0; tries < 3; tries++) {
+				SpriteItem selectedItem = Inventory.getSelectedItem();
+				if (selectedItem != null) {
+					String selectedName = selectedItem.getDefinition().getName();
+					if (selectedName.equals(nameI)) {
+						selectItem(nameI);
+					} else if (selectedName.equals(nameJ)) {
+						selectItem(nameJ);
 					} else {
-						if (i != null) {
-							if (i.interact("Use")) {
-								// return useOn(i, j, condition);
-							}
-						}
+						selectedItem.click();
+					}
+				} else {
+					switch (Random.nextInt(0, 5)) {
+					case 3:
+						selectItem(nameI);
+						break;
+
+					default:
+						selectItem(nameJ);
+						break;
 					}
 				}
+
 			}
 		}
 		return false;

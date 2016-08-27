@@ -21,7 +21,7 @@ public class User {
 	}
 
 	public static boolean isTargeting() {
-        	Player player = Players.getLocal();
+        Player player = Players.getLocal();
 		return player != null && player.getTarget() != null;
 	}
 
